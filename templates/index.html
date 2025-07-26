@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask To-Do App</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle, #fdf6f0, #ffe9ec, #e0f7fa);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ff6f61;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px #fff;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .note {
+            background-color: #fff59d;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+            min-height: 100px;
+            position: relative;
+            transform: rotate(-1deg);
+        }
+
+        .note:nth-child(3n) { background-color: #a5d6a7; transform: rotate(2deg); }
+        .note:nth-child(4n) { background-color: #81d4fa; transform: rotate(-3deg); }
+        .note:nth-child(5n) { background-color: #f8bbd0; transform: rotate(1deg); }
+
+        .note span {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .note.completed span {
+            text-decoration: line-through;
+            color: #666;
+        }
+
+        .actions {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1.1rem;
+            background: #ffffffaa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .actions a:hover {
+            background: #ffcdd2;
+        }
+
+        .input-area {
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 16px;
+            background: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background: #e53935;
+        }
+
+        .clear-btn {
+            display: block;
+            margin: 20px auto;
+            background: #6d4c41;
+            width: fit-content;
+        }
+
+        .clear-btn:hover {
+            background: #4e342e;
+        }
+    </style>
+</head>
+<body>
+    <h1> Flask To-Do App </h1>
+
+    <form action="/add" method="POST" class="input-area">
+        <input type="text" name="task" placeholder="To-Do App ..." required>
+        <button type="submit">Add</button>
+    </form>
+
+    <form action="/clear" method="POST">
+        <button type="submit" class="clear-btn">Clear All Tasks</button>
+    </form>
+
+    <div class="board">
+        {% for task in tasks %}
+        <div class="note {% if task.completed %}completed{% endif %}">
+            <span>{{ task.content }}</span>
+            <div class="actions">
+                <a href="/complete/{{ task.id }}" title="Complete">
+                    {% if not task.completed %}✅{% else %}✔️{% endif %}
+                </a>
+                <a href="/delete/{{ task.id }}" title="Delete">🗑️</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
